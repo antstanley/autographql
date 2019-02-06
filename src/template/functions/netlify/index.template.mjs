@@ -29,15 +29,16 @@ const handler = async (event, context, callback) => {
       if (queryDoc) {
         const gqlContext = event.header || null
 
+        const gqlResponse = await execute(
+          gqlSchema,
+          queryDoc,
+          resolvers,
+          gqlContext,
+          variables
+        )
         const response = {
           statusCode: 200,
-          body: await execute(
-            gqlSchema,
-            queryDoc,
-            resolvers,
-            gqlContext,
-            variables
-          )
+          body: JSON.stringify(gqlResponse)
         }
         callback(null, response)
       } else {
