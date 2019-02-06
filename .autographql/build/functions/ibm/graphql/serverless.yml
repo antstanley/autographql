@@ -1,0 +1,14 @@
+service: graphql
+provider:
+  name: openwhisk
+  runtime: nodejs:8
+functions:
+  graphql:
+    handler: index.handler
+    events:
+      - http:
+          path: graphql
+          method: post
+plugins:
+  - serverless-openwhisk
+name: graphql

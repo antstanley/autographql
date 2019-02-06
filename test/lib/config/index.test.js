@@ -3,12 +3,12 @@ import test from 'ava'
 import { join } from 'path'
 import { writeFileSync, unlinkSync, mkdirSync, rmdirSync } from 'fs'
 
-const configLocation = './test/sample/faasql.config.json'
+const configLocation = './test/sample/autographql.config.json'
 const configPartialLocation = './test/sample/faasql.config.partial.json'
 
 test('Validate root folder location is valid', async t => {
   const { root } = await config(configLocation)
-  const expectedLoc = join(__dirname, '../../../../.faasql')
+  const expectedLoc = join(__dirname, '../../../../.autographql')
   t.is(root, expectedLoc)
 })
 

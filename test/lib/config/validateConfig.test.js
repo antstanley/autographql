@@ -3,7 +3,7 @@ import test from 'ava'
 
 const validConfig = {
   name: 'graphql',
-  root: './.faasql/',
+  root: './.autographql/',
   schema: './test/sample/schema/starwars.gql',
   resolvers: './test/sample/resolvers'
 }
@@ -39,7 +39,9 @@ test('Bad config failing on Schema', t => {
   try {
     validateConfig(badConfigSchema)
   } catch (error) {
-    if (error.message.includes('Schema file does not exist at location:')) { t.pass() }
+    if (error.message.includes('Schema file does not exist at location:')) {
+      t.pass()
+    }
   }
 })
 

@@ -7,19 +7,19 @@ import setProjectRoot from './setProjectRoot'
 const projectRoot = setProjectRoot()
 
 const loadDefault = () => {
-  if (existsSync(join(projectRoot, './faasql.config.json'))) {
+  if (existsSync(join(projectRoot, './autographql.config.json'))) {
     return JSON.parse(
-      readFileSync(join(projectRoot, './faasql.config.json'), 'utf-8')
+      readFileSync(join(projectRoot, './autographql.config.json'), 'utf-8')
     )
   } else {
-    if (existsSync(join(projectRoot, './faasql.config.yml'))) {
+    if (existsSync(join(projectRoot, './autographql.config.yml'))) {
       return YAML.parse(
-        readFileSync(join(projectRoot, './faasql.config.yml'), 'utf-8')
+        readFileSync(join(projectRoot, './autographql.config.yml'), 'utf-8')
       )
     } else {
       logger(
         'warn',
-        'No faasql.config.json or faasql.config.yml found, using defaults.'
+        'No autographql.config.json or autographql.config.yml found, using defaults.'
       )
       return null
     }
