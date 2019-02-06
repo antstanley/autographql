@@ -8,7 +8,9 @@ const handler = async (event, context, callback) => {
     console.log(event)
     const gqlSDL = `__SDL__ `
 
-    if (!body.query) {
+    const bodyJSON = JSON.parse(body)
+    console.log(bodyJSON)
+    if (!bodyJSON.query) {
       const response = {
         statusCode: 400,
         body: JSON.stringify('No query specified')
@@ -19,8 +21,8 @@ const handler = async (event, context, callback) => {
         console.log('Init Schema')
         gqlSchema = buildSchema(gqlSDL)
       }
-      const bodyJSON = JSON.parse(body)
-      console.log(bodyJSON)
+      // const bodyJSON = JSON.parse(body)
+      // console.log(bodyJSON)
       const { query, variables } = bodyJSON
 
       const queryDoc = parse(query)
