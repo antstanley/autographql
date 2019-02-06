@@ -1,0 +1,13 @@
+{
+    "name": "graphql",
+    "version": 2,
+    "engines": {
+        "node": "7.4.0"
+    },
+    "builds": [
+        {
+            "src": "/index.js",
+            "use": "@now/node"
+        }
+    ]
+}

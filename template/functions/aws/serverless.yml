@@ -1,0 +1,12 @@
+service: graphql 
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  graphql:
+    handler: handler.handler
+    - http:
+          path: graphql
+          method: post

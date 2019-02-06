@@ -1,0 +1,31 @@
+{
+    "name": "graphql",
+    "root": "./",
+    "schema": "./test/sample/schema/starwars.gql",
+    "resolvers": "./test/sample/resolvers",
+    "external": [
+        "package.json",
+        "data"
+    ],
+    "providers": [
+        {
+            "name": "aws"
+        },
+        {
+            "name": "now"
+        },
+        {
+            "name": "ibm"
+        },
+        {
+            "name": "gcp"
+        },
+        {
+            "name": "netlify",
+            "dist": "./dist"
+        }
+    ],
+    "dev": {
+        "port": 7000
+    }
+}

@@ -1,0 +1,43 @@
+type Query {
+  human(id: ID!): Human
+  allHumans: [Human]
+  droid(id: ID!): Droid
+  allDroids: [Droid]
+}
+
+interface Character {
+  id: ID!
+  name: String
+  friends: [Character]
+  appearsIn: [Episode]
+  secretBackstory: String
+}
+
+enum Episode {
+  PHANTOM
+  CLONES
+  SITH
+  NEWHOPE
+  EMPIRE
+  JEDI
+  FORCE
+  LASTJEDI
+}
+
+type Droid implements Character {
+  id: ID!
+  name: String
+  friends: [Character]
+  appearsIn: [Episode]
+  secretBackstory: String
+  primaryFunction: String
+}
+
+type Human implements Character {
+  id: ID!
+  name: String
+  friends: [Character]
+  appearsIn: [Episode]
+  homePlanet: String
+  secretBackstory: String
+}
