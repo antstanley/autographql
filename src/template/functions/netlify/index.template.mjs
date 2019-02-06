@@ -15,9 +15,13 @@ const handler = async (event, context, callback) => {
       }
       callback(null, response)
     } else {
-      if (!gqlSchema) gqlSchema = buildSchema(gqlSDL)
-
-      const { query, variables } = JSON.parse(body)
+      if (!gqlSchema) {
+        console.log('Init Schema')
+        gqlSchema = buildSchema(gqlSDL)
+      }
+      const bodyJSON = JSON.parse(body)
+      console.log(bodyJSON)
+      const { query, variables } = bodyJSON
 
       const queryDoc = parse(query)
       if (queryDoc) {
