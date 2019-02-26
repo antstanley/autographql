@@ -7,12 +7,7 @@ const initHttpServer = async options => {
     const { root, resolvers, schema, dev, external } = options
     const port = dev ? (dev.port ? dev.port : 7000) : 7000
     logger('info', 'dev: starting http server')
-    /*
-    logger(
-      'warn',
-      `root: ${root}\nresolvers: ${resolvers}\nschema: ${schema}\nport: ${port}`
-    )
-    */
+
     const { resolverLoc, schemaLoc } = buildHttp({
       root,
       schema,

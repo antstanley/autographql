@@ -41,7 +41,6 @@ const httpServer = (port, resolvers, schema) => {
   })
 
   server.listen({ port })
-  logger('info', `dev: Server started at http://localhost:${port}`)
   return true
 }
 

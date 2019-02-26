@@ -3,37 +3,50 @@ import resolvers from './resolvers'
 let gqlSchema
 
 const handler = async event => {
-  const body = event.body
+  try {
+    const body = JSON.parse(event.body)
 
-  const gqlSDL = `__SDL__ `
+    const gqlSDL = `__SDL__ `
 
-  if (!body.query) {
-    const response = {
-      statusCode: 400,
-      body: JSON.stringify('No query specified')
-    }
-    return response
-  } else {
-    if (!gqlSchema) gqlSchema = buildSchema(gqlSDL)
-
-    const { query, variables } = body
-
-    const queryDoc = parse(query)
-    if (queryDoc) {
-      const context = event.header || null
-
+    if (!body.query) {
       const response = {
-        statusCode: 200,
-        body: await execute(gqlSchema, queryDoc, resolvers, context, variables)
+        statusCode: 400,
+        body: JSON.stringify('No query specified')
       }
       return response
     } else {
-      const response = {
-        statusCode: 400,
-        body: `GraphQL query not valid: ${query}`
+      if (!gqlSchema) gqlSchema = buildSchema(gqlSDL)
+
+      const { query, variables } = body
+
+      const queryDoc = parse(query)
+      if (queryDoc) {
+        const context = event.header || null
+
+        const responseBody = JSON.stringify(
+          await execute(gqlSchema, queryDoc, resolvers, context, variables)
+        )
+
+        const response = {
+          statusCode: 200,
+          body: responseBody
+        }
+        return response
+      } else {
+        const response = {
+          statusCode: 400,
+          body: `GraphQL query not valid: ${query}`
+        }
+        return response
       }
-      return response
     }
+  } catch (error) {
+    console.log(error)
+    const response = {
+      statusCode: 400,
+      body: `An server side error occurred`
+    }
+    return response
   }
 }
 

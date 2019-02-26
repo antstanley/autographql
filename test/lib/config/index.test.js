@@ -1,29 +1,29 @@
-import config from '../../../lib/config/index.mjs'
+import config from '../../../src/lib/config/index.mjs'
 import test from 'ava'
 import { join } from 'path'
 import { writeFileSync, unlinkSync, mkdirSync, rmdirSync } from 'fs'
 
 const configLocation = './test/sample/autographql.config.json'
-const configPartialLocation = './test/sample/faasql.config.partial.json'
+const configPartialLocation = './test/sample/autographql.config.partial.json'
 
 test('Validate root folder location is valid', async t => {
   const { root } = await config(configLocation)
-  const expectedLoc = join(__dirname, '../../../../.autographql')
+  const expectedLoc = join(__dirname, '../../../.autographql')
   t.is(root, expectedLoc)
 })
 
 test('Partial config load', async t => {
-  mkdirSync(join(__dirname, '../../../../src'))
-  mkdirSync(join(__dirname, '../../../../src/resolvers'))
-  mkdirSync(join(__dirname, '../../../../src/schema'))
+  // mkdirSync(join(__dirname, '../../../../src'))
+  mkdirSync(join(__dirname, '../../../src/resolvers'))
+  mkdirSync(join(__dirname, '../../../src/schema'))
   writeFileSync(
-    join(__dirname, '../../../../src/schema/schema.gql'),
+    join(__dirname, '../../../src/schema/schema.gql'),
     'test data - ignore'
   )
 
   const defaultJSON = {
     name: 'graphql',
-    root: './.faasql/',
+    root: './.autographql/',
     schema: './src/schema/schema.gql',
     resolvers: './src/resolvers'
   }
@@ -43,7 +43,7 @@ test('Partial config load', async t => {
     } else {
       t.true(
         partialJSON[elementArray[i]] ===
-          join(__dirname, '../../../../', defaultJSON[elementArray[i]]),
+          join(__dirname, '../../../', defaultJSON[elementArray[i]]),
         `key:${elementArray[i]}\nReturned: ${
           partialJSON[elementArray[i]]
         }\nExpected: ${join(
