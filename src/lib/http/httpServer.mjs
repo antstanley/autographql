@@ -20,7 +20,7 @@ const httpServer = (port, resolvers, schema) => {
         })
         res.write(response, 'utf8')
         res.end(() => {
-          logger('info', `Response to:\n ${operationName}`)
+          logger('info', `Response to: ${operationName}`)
         })
       })
     } else {
