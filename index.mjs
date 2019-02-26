@@ -1,3 +1,6 @@
-import bundleGraphQL from './lib/build'
+import build from './lib/build'
+import config from './lib/config'
+import http from './lib/http'
+import utils from './lib/utils'
 
-export { bundleGraphQL }
+export { build, config, http, utils }
