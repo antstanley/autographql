@@ -44,7 +44,7 @@ const handler = async event => {
     console.log(error)
     const response = {
       statusCode: 400,
-      body: `An server side error occurred`
+      body: `A server side error has occurred`
     }
     return response
   }
