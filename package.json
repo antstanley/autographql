@@ -1,6 +1,6 @@
 {
   "name": "autographql",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "GraphQL bundling and deployment library to run in any FaaS platforms",
   "main": "lib/index",
   "bin": {
