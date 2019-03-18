@@ -29,36 +29,30 @@ const createFunction = ({
     if (copyResolvers(resolverLocation, resolvers)) {
       // create function index.js and copy it
 
-      // check if you need to create an Azure function app
-      if (provider !== 'azure') {
-        const templateLocation = setTemplateLocation(
-          `../../../../template/functions/${provider}/index.template.mjs`
-        )
+      const templateLocation = setTemplateLocation(
+        `../../../../template/functions/${provider}/index.template.mjs`
+      )
 
-        const schemaFile = readFileSync(schema, 'utf-8')
-        const functionTemplate = readFileSync(templateLocation, 'utf-8')
+      const schemaFile = readFileSync(schema, 'utf-8')
+      const functionTemplate = readFileSync(templateLocation, 'utf-8')
 
-        const providerFunction = functionTemplate.replace(
-          /__SDL__/g,
-          schemaFile
-        )
+      const providerFunction = functionTemplate.replace(/__SDL__/g, schemaFile)
 
-        if (!providerFunction) {
-          throw new Error('Unable to inject schema into function')
-        }
-        logger('info', `${provider} - ${name}: Writing function`)
-        writeFileSync(`${functionLocation}/index.mjs`, providerFunction)
-        prepareDeploy({ name, functionName, functionLocation })
+      if (!providerFunction) {
+        throw new Error('Unable to inject schema into function')
+      }
+      logger('info', `${provider} - ${name}: Writing function`)
+      writeFileSync(`${functionLocation}/index.mjs`, providerFunction)
+      prepareDeploy({ name, functionName, functionLocation })
 
-        return {
-          name,
-          provider,
-          distName: `${root}/dist/functions/${provider}`,
-          input: `${functionLocation}/index.mjs`,
-          output: `${root}/dist/functions/${provider}/${name}/`,
-          functionConfig,
-          external
-        }
+      return {
+        name,
+        provider,
+        distName: `${root}/dist/functions/${provider}`,
+        input: `${functionLocation}/index.mjs`,
+        output: `${root}/dist/functions/${provider}/${name}/`,
+        functionConfig,
+        external
       }
     }
   } catch (error) {

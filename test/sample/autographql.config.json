@@ -4,7 +4,7 @@
     "schema": "./test/sample/schema/starwars.gql",
     "resolvers": "./test/sample/resolvers",
     "external": [],
-    "files":[
+    "files": [
         "package.json",
         "data"
     ],
@@ -22,6 +22,9 @@
         },
         {
             "provider": "gcp"
+        },
+        {
+            "provider": "azure"
         },
         {
             "provider": "netlify",
