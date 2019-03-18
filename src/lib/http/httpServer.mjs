@@ -1,7 +1,7 @@
 import http from 'http'
 import { logger } from '../utils'
 import gqlFunction from './gqlFunction'
-import authenticate from '@esmodule/jwt-verify'
+// import authenticate from '@esmodule/jwt-verify'
 
 const httpServer = (port, resolvers, schema) => {
   const server = http.createServer((req, res) => {
@@ -12,6 +12,7 @@ const httpServer = (port, resolvers, schema) => {
       })
       req.on('error', error => logger('error', `http: ${error}`))
       req.on('end', async () => {
+        /*
         if (req.headers.authorization) {
           console.time('auth')
           const authHeader = req.headers.authorization
@@ -23,6 +24,7 @@ const httpServer = (port, resolvers, schema) => {
           )
           console.timeEnd('auth')
         }
+        */
         const reqJSON = JSON.parse(reqData)
         const operationName = reqJSON.operationName || reqJSON.query
         const response = await gqlFunction(reqJSON, resolvers, schema)
