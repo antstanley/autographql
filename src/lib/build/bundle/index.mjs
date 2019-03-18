@@ -1,29 +1,44 @@
 import bundleProject from './bundleProject'
 import copyFunc from './copyFunc'
 import copyExternal from './copyExternal'
+import { logger } from '../../utils'
 
-const bundleGraphQL = async functionManifest => {
+const bundleGraphQL = async (functionManifest, rollupConfig) => {
   try {
     const manifest = functionManifest
     const arrLength = manifest.length
 
     for (let i = 0; i < arrLength; i++) {
       const options = manifest[i]
-      const bundleSuccess = await bundleProject(options)
+      const bundleSuccess = await bundleProject(options, rollupConfig)
       if (bundleSuccess) {
-        if (options.provider) {
-          const { input, output, provider, external } = options
-          if (provider.dist) {
-            await copyFunc({ provider, output })
+        if (options.functionConfig) {
+          const {
+            input,
+            output,
+            functionConfig,
+            external,
+            provider,
+            name
+          } = options
+          if (functionConfig.dist) {
+            await copyFunc({ functionConfig, output, provider, name })
           }
           if (external) {
-            await copyExternal({ provider, external, input, output })
+            await copyExternal({
+              provider,
+              name,
+              external,
+              input,
+              output,
+              functionConfig
+            })
           }
         }
       }
     }
   } catch (error) {
-    throw new Error(error)
+    logger('error', error)
   }
 }
 

@@ -13,9 +13,9 @@ const cli = async args => {
         const configFile = args.config || (args.c || false)
         const resolvers = args.resolvers || (args.r || false)
         const schema = args.schema || (args.s || false)
-        const providers = args.provider || (args.p || false)
+        const functions = args.functions || (args.p || false)
 
-        const options = await config(configFile, resolvers, schema, providers)
+        const options = await config(configFile, resolvers, schema, functions)
 
         switch (command) {
           case 'bundle':

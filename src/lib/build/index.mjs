@@ -7,24 +7,17 @@ const build = async options => {
   try {
     await validate(options.schema)
 
-    /*
-    if (!validateErrors) {
-      throw new Error(
-        `Unable to parse GraphQL schema with errors.\n${validateErrors}`
-      )
-    }
-    */
-
     const functionManifest = await prepare(options)
 
     if (!functionManifest) {
       logger('error', 'Unable to prepare project root')
       // throw new Error('Unable to prepare project root')
     } else {
-      return bundle(functionManifest)
+      const { rollup } = options
+      return bundle(functionManifest, rollup)
     }
   } catch (error) {
-    logger('error', `Bundle process failed:\n${error}`)
+    logger('error', `Bundle process failed: ${error}\n${error.stack}`)
   }
 }
 

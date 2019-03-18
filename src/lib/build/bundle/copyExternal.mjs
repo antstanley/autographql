@@ -38,12 +38,19 @@ const copyFilesFolders = async (inputDir, output, external, dist) => {
   }
 }
 
-const copyExternal = async ({ provider, external, input, output }) => {
+const copyExternal = async ({
+  provider,
+  name,
+  functionConfig,
+  external,
+  input,
+  output
+}) => {
   try {
-    logger('info', `${provider.name}: Copying external data`)
+    logger('info', `${provider} - ${name}: Copying external data`)
 
     const inputDir = join(dirname(input), 'resolvers')
-    const dist = provider.dist ? provider.dist : false
+    const dist = functionConfig.dist ? functionConfig.dist : false
 
     if (Array.isArray(external)) {
       const arrLength = external.length

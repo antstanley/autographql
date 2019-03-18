@@ -4,7 +4,7 @@ import bundleResolvers from './bundleResolvers'
 import prepare from './prepare'
 import copyExternal from './copyExternal'
 
-const buildHttp = ({ root, schema, resolvers, external }) => {
+const buildHttp = ({ root, schema, resolvers, external, rollup }) => {
   try {
     const buildDestination = root.endsWith('/') ? `${root}http` : `${root}/http`
     const resolverDest = `${buildDestination}/resolvers`
@@ -20,7 +20,7 @@ const buildHttp = ({ root, schema, resolvers, external }) => {
       logger('info', `dev: Exporting resolver`)
       const resolverLoc = `${resolverDest}/index.js`
 
-      if (bundleResolvers(resolvers, resolverLoc)) {
+      if (bundleResolvers(resolvers, resolverLoc, rollup)) {
         if (external) {
           copyExternal({ external, output: resolverDest, input: resolvers })
         }

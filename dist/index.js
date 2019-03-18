@@ -11641,26 +11641,35 @@ type Human implements Character {
   homePlanet: String
   secretBackstory: String
 } `;
+    const bodyJSON = JSON.parse(body);
+    console.log(bodyJSON);
 
-    if (!body.query) {
+    if (!bodyJSON.query) {
       const response = {
         statusCode: 400,
         body: JSON.stringify('No query specified')
       };
       callback(null, response);
     } else {
-      if (!gqlSchema) gqlSchema = buildSchema(gqlSDL);
+      if (!gqlSchema) {
+        console.log('Init Schema');
+        gqlSchema = buildSchema(gqlSDL);
+      } // const bodyJSON = JSON.parse(body)
+      // console.log(bodyJSON)
+
+
       const {
         query,
         variables
-      } = JSON.parse(body);
+      } = bodyJSON;
       const queryDoc = parse(query);
 
       if (queryDoc) {
         const gqlContext = event.header || null;
+        const gqlResponse = await execute(gqlSchema, queryDoc, resolvers, gqlContext, variables);
         const response = {
           statusCode: 200,
-          body: await execute(gqlSchema, queryDoc, resolvers, gqlContext, variables)
+          body: JSON.stringify(gqlResponse)
         };
         callback(null, response);
       } else {

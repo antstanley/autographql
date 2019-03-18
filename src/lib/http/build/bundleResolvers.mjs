@@ -1,10 +1,12 @@
 import { rollup } from 'rollup'
+/*
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import json from 'rollup-plugin-json'
 import babel from 'rollup-plugin-babel'
+*/
 import { existsSync, writeFileSync } from 'fs'
-import { logger } from '../../utils'
+import { logger, rollupDefault } from '../../utils'
 
 async function build (inputOptions, outputOptions, outputLoc) {
   // create a bundle
@@ -16,13 +18,16 @@ async function build (inputOptions, outputOptions, outputLoc) {
   return true
 }
 
-export default async (resolver, outputLoc) => {
+export default async (resolver, outputLoc, rollupConfig) => {
   //  console.log(output)
   logger('info', `dev: Generating bundled resolver ...`)
 
   const input = `${resolver}/index.mjs`
   // bundle
   if (existsSync(resolver)) {
+    const inputOptions = await rollupDefault(rollupConfig, input)
+
+    /*
     const inputOptions = {
       input,
       plugins: [
@@ -50,6 +55,7 @@ export default async (resolver, outputLoc) => {
         })
       ]
     }
+    */
 
     const outputOptions = {
       format: 'cjs'

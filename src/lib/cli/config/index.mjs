@@ -1,8 +1,8 @@
 import config from '../../config'
 import validate from './validate'
 
-const buildConfig = async (configFile, resolvers, schema, providers) => {
-  if (validate(resolvers, schema, providers)) {
+const buildConfig = async (configFile, resolvers, schema, functions) => {
+  if (validate(resolvers, schema, functions)) {
     const options = configFile ? await config(configFile) : await config('')
 
     if (schema) {
@@ -13,8 +13,8 @@ const buildConfig = async (configFile, resolvers, schema, providers) => {
       options.resolvers = resolvers
     }
 
-    if (providers) {
-      options.providers = providers
+    if (functions) {
+      options.providers = functions
     }
 
     return options

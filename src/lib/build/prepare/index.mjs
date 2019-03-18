@@ -6,27 +6,27 @@ const prepare = async ({
   schema,
   resolvers,
   name,
-  providers,
+  functions,
   external
 }) => {
   try {
-    let functions = []
+    let functionManifest = []
     if (createStructure(root)) {
-      providers.forEach(provider => {
-        functions.push(
+      functions.forEach(functionConfig => {
+        functionManifest.push(
           createFunction({
             root,
             schema,
             resolvers,
             functionName: name,
-            provider,
+            functionConfig,
             external
           })
         )
       })
     }
 
-    return functions
+    return functionManifest
   } catch (error) {
     throw new Error(error)
   }

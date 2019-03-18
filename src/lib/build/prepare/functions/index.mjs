@@ -9,29 +9,30 @@ const createFunction = ({
   schema,
   resolvers,
   functionName,
-  provider,
+  functionConfig,
   external
 }) => {
   try {
-    const { name } = provider
+    const { provider } = functionConfig
+    const name = functionConfig.name ? functionConfig.name : functionName
 
-    const buildDestination = `${root}/build/functions/${name}`
-    const functionLocation = `${buildDestination}/${functionName}`
+    const buildDestination = `${root}/build/functions/${provider}`
+    const functionLocation = `${buildDestination}/${name}`
     const resolverLocation = `${functionLocation}/resolvers`
 
     // create function and resolvers folder
     mkdirSync(buildDestination)
     mkdirSync(functionLocation)
     mkdirSync(resolverLocation)
-    logger('info', `${name}: Exporting resolvers`)
+    logger('info', `${provider} - ${name}: Exporting resolvers`)
     // copy resolvers to resolver folder
     if (copyResolvers(resolverLocation, resolvers)) {
       // create function index.js and copy it
 
       // check if you need to create an Azure function app
-      if (name !== 'azure') {
+      if (provider !== 'azure') {
         const templateLocation = setTemplateLocation(
-          `../../../../template/functions/${name}/index.template.mjs`
+          `../../../../template/functions/${provider}/index.template.mjs`
         )
 
         const schemaFile = readFileSync(schema, 'utf-8')
@@ -45,16 +46,17 @@ const createFunction = ({
         if (!providerFunction) {
           throw new Error('Unable to inject schema into function')
         }
-        logger('info', `${name}: Writing function`)
+        logger('info', `${provider} - ${name}: Writing function`)
         writeFileSync(`${functionLocation}/index.mjs`, providerFunction)
         prepareDeploy({ name, functionName, functionLocation })
 
         return {
           name,
-          distName: `${root}/dist/functions/${name}`,
-          input: `${functionLocation}/index.mjs`,
-          output: `${root}/dist/functions/${name}/${functionName}/`,
           provider,
+          distName: `${root}/dist/functions/${provider}`,
+          input: `${functionLocation}/index.mjs`,
+          output: `${root}/dist/functions/${provider}/${name}/`,
+          functionConfig,
           external
         }
       }

@@ -3,15 +3,15 @@ import { join } from 'path'
 import { logger } from '../../utils'
 import setDistDir from './setDestDir'
 
-const copyFunc = async ({ output, provider }) => {
+const copyFunc = async ({ output, functionConfig, provider, name }) => {
   try {
     logger(
       'info',
-      `${provider.name}: Copying function to distribution folder '${
-        provider.dist
+      `${provider} - ${name}: Copying function to distribution folder '${
+        functionConfig.dist
       }'`
     )
-    const { dist } = provider
+    const { dist } = functionConfig
     const fileDestDir = setDistDir(dist)
     const fileDest = join(fileDestDir, 'index.js')
     const fileSrc = join(output, 'index.js')

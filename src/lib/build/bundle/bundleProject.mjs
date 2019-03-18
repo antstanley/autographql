@@ -1,10 +1,12 @@
 import { rollup } from 'rollup'
+/*
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import json from 'rollup-plugin-json'
 import babel from 'rollup-plugin-babel'
+*/
 import fs from 'fs'
-import { removeFolder, logger } from '../../utils'
+import { removeFolder, logger, rollupDefault } from '../../utils'
 
 async function build (inputOptions, outputOptions) {
   // create a bundle
@@ -16,18 +18,25 @@ async function build (inputOptions, outputOptions) {
   return true
 }
 
-export default async ({ name, distName, input, output }) => {
+export default async (
+  { provider, name, distName, input, output },
+  rollupConfig
+) => {
   //  console.log(output)
-  logger('info', `${name}: Generating bundled function`)
+  logger('info', `${provider} - ${name}: Generating bundled function`)
 
-  if (removeFolder(distName)) {
-    fs.mkdirSync(distName)
-    fs.mkdirSync(output)
-  }
+  try {
+    if (removeFolder(distName)) {
+      fs.mkdirSync(distName)
+      fs.mkdirSync(output)
+    }
 
-  if (fs.existsSync(input)) {
-    // bundle
+    if (fs.existsSync(input)) {
+      // bundle
 
+      const inputOptions = await rollupDefault(rollupConfig, input)
+
+      /*
     const inputOptions = {
       input,
       plugins: [
@@ -62,15 +71,18 @@ export default async ({ name, distName, input, output }) => {
         warn(warning)
       }
     }
+    */
+      const outputOptions = {
+        format: 'cjs',
+        file: 'index.js',
+        dir: output
+      }
 
-    const outputOptions = {
-      format: 'cjs',
-      file: 'index.js',
-      dir: output
+      return build(inputOptions, outputOptions)
+    } else {
+      logger('error', 'Entry Point does not exist')
     }
-
-    return build(inputOptions, outputOptions)
-  } else {
-    logger('error', 'Entry Point does not exist')
+  } catch (error) {
+    logger('error', error.stack)
   }
 }

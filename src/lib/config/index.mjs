@@ -18,10 +18,10 @@ const configOptions = async configFile => {
   }
 
   const providerDefaults = [
-    { name: 'aws' },
-    { name: 'ibm' },
-    { name: 'gcp' },
-    { name: 'now' }
+    { provider: 'aws' },
+    { provider: 'ibm' },
+    { provider: 'gcp' },
+    { provider: 'now' }
   ]
 
   const devDefaults = {
@@ -47,8 +47,8 @@ const configOptions = async configFile => {
         options[setting] = configDefaults[setting]
       }
     }
-    if (config.providers) {
-      options.providers = config.providers
+    if (config.functions) {
+      options.functions = config.functions
     } else {
       options.providers = providerDefaults
     }
@@ -64,7 +64,7 @@ const configOptions = async configFile => {
   } else {
     logger('info', 'No config file specified, loading defaults...')
     options = configDefaults
-    options.providers = providerDefaults
+    options.functions = providerDefaults
     options.dev = devDefaults
   }
 

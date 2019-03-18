@@ -3,25 +3,28 @@
     "root": "./",
     "schema": "./test/sample/schema/starwars.gql",
     "resolvers": "./test/sample/resolvers",
-    "external": [
+    "external": [],
+    "files":[
         "package.json",
         "data"
     ],
-    "providers": [
+    "rollup": {},
+    "babel": {},
+    "functions": [
         {
-            "name": "aws"
+            "provider": "aws"
         },
         {
-            "name": "now"
+            "provider": "now"
         },
         {
-            "name": "ibm"
+            "provider": "ibm"
         },
         {
-            "name": "gcp"
+            "provider": "gcp"
         },
         {
-            "name": "netlify",
+            "provider": "netlify",
             "dist": "./dist"
         }
     ],
