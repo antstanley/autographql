@@ -15,6 +15,7 @@ async function build (inputOptions, outputOptions, outputLoc) {
   const { code } = await bundle.generate(outputOptions)
   // logger(`warn`, `code: ${code}`)
   writeFileSync(outputLoc, code)
+  logger('info', `dev: http server ready!`)
   return true
 }
 
