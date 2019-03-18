@@ -3,7 +3,7 @@ import resolvers from './resolvers'
 let gqlSchema
 
 const handler = async (context, req) => {
-  const body = JSON.parse(req.body)
+  const body = req.body
 
   const gqlSDL = `__SDL__`
 
@@ -17,10 +17,6 @@ const handler = async (context, req) => {
     if (!gqlSchema) gqlSchema = await buildSchema(gqlSDL)
 
     const { query, variables } = body
-
-    const authToken = req.get('Authorization')
-
-    const context = authToken ? { authToken } : false
 
     const response = await graphql(
       gqlSchema,
