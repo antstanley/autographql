@@ -142,8 +142,10 @@ const bundleOptions = async (rollupOptions, input) => {
       babel(babelOptions)
     ],
     onwarn (warning, warn) {
-      if (warningOptions.include(warning.code)) {
-        return
+      if (Array.isArray(warningOptions)) {
+        if (warningOptions.includes(warning.code)) {
+          return
+        }
       }
       warn(warning)
     }
