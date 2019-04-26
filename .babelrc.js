@@ -17,7 +17,14 @@ module.exports = {
     },
     mjs: {
       presets: [
-        ['@babel/preset-env', { targets: { esmodules: true }, modules: false }]
+        [
+          '@babel/preset-env',
+          {
+            targets: { esmodules: true, node: true },
+            modules: false,
+            loose: true
+          }
+        ]
       ]
     }
   }
