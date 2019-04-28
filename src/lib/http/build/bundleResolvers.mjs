@@ -22,36 +22,6 @@ export default async (resolver, outputLoc, rollupConfig) => {
   if (existsSync(resolver)) {
     const inputOptions = await rollupDefault(rollupConfig, input)
 
-    /*
-    const inputOptions = {
-      input,
-      plugins: [
-        resolve({
-          module: false,
-          main: true,
-          extensions: ['.mjs', '.js', '.json']
-        }),
-        commonjs(),
-        json({
-          preferConst: true
-        }),
-        babel({
-          presets: [
-            [
-              '@babel/preset-env',
-              {
-                targets: {
-                  node: '8'
-                }
-              }
-            ]
-          ],
-          plugins: ['@babel/plugin-syntax-import-meta']
-        })
-      ]
-    }
-    */
-
     const outputOptions = {
       format: 'cjs'
     }

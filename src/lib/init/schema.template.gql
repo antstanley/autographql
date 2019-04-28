@@ -1,0 +1,22 @@
+type Query {
+  getCharacter(id: ID!): Human
+}
+
+type Character {
+  id: ID!
+  name: String
+  friends: [Character]
+  appearsIn: [Episode]
+  secretBackstory: String
+}
+
+enum Episode {
+  PHANTOM
+  CLONES
+  SITH
+  NEWHOPE
+  EMPIRE
+  JEDI
+  FORCE
+  LASTJEDI
+}
