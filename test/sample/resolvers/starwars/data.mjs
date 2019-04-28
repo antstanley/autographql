@@ -9,7 +9,8 @@ export default {
         { id: 4, name: 'Princess Leia' }
       ],
       appearsIn: [4, 5, 6, 7],
-      secretBackstory: ''
+      secretBackstory: '',
+      homePlanet: 'Correllia'
     },
     2: {
       id: 2,
@@ -20,7 +21,8 @@ export default {
         { id: 4, name: 'Princess Leia' }
       ],
       appearsIn: [4, 5, 6, 7, 8],
-      secretBackstory: ''
+      secretBackstory: '',
+      homePlanet: 'Kashyyyk'
     },
     3: {
       id: 3,

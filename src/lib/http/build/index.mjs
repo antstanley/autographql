@@ -4,6 +4,10 @@ import bundleResolvers from './bundleResolvers'
 import prepare from './prepare'
 import copyExternal from './copyExternal'
 
+const getRandomInt = max => {
+  return Math.floor(Math.random() * Math.floor(max))
+}
+
 const buildHttp = ({ root, schema, resolvers, external, rollup }) => {
   try {
     const buildDestination = root.endsWith('/') ? `${root}http` : `${root}/http`
@@ -18,7 +22,8 @@ const buildHttp = ({ root, schema, resolvers, external, rollup }) => {
       copyFileSync(schema, schemaLoc)
 
       logger('info', `dev: Exporting resolver`)
-      const resolverLoc = `${resolverDest}/index.js`
+      const randomIdx = getRandomInt(9999)
+      const resolverLoc = `${resolverDest}/index${randomIdx}.js`
 
       if (bundleResolvers(resolvers, resolverLoc, rollup)) {
         if (external) {

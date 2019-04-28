@@ -1,6 +1,5 @@
 import { graphql, buildSchema } from 'graphql'
 import { readFileSync } from 'fs'
-import { relative } from 'path'
 import { logger } from '../utils'
 // import resolverFunc from '../../test/sample/resolvers'
 
