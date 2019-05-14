@@ -1,0 +1,1 @@
+{"name":"autographql","resolvers":"./src/resolvers","schema":"./src/schema/schema.gql","providers":["aws","azure","gcp","ibm","netlify","now"],"functions":[]}
