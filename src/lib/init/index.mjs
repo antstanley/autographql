@@ -1,15 +1,9 @@
 import prompt from './prompt'
-import prepare from './prepare'
 import { logger } from '../utils'
 
-const initProject = async () => {
+const initProject = () => {
   try {
-    const prepareOpts = await prompt()
-    if (prepareOpts) {
-      await prepare(prepareOpts)
-    } else {
-      logger('warn', 'Config file not created')
-    }
+    return prompt()
   } catch (error) {
     logger('error', `Unable to initialise project with error: ${error}`)
   }

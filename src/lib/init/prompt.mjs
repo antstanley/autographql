@@ -2,6 +2,7 @@ import readline from 'readline'
 import { basename } from 'path'
 import chalk from 'chalk'
 import { logger } from '../utils'
+import prepare from './prepare'
 
 const validateProviders = providers => {
   const availableProviders = ['aws', 'azure', 'gcp', 'ibm', 'netlify', 'now']
@@ -35,7 +36,7 @@ const setFunctions = providers => {
   return functions
 }
 
-const prompt = async () => {
+const prompt = () => {
   try {
     const currentDir = basename(process.cwd())
 
@@ -136,6 +137,7 @@ const prompt = async () => {
                             initOptions.providers
                           )
                           delete initOptions.providers
+                          prepare({ options: initOptions, configFile })
                         } else {
                           initOptions = null
                         }
@@ -144,6 +146,7 @@ const prompt = async () => {
                           initOptions.providers
                         )
                         delete initOptions.providers
+                        prepare({ options: initOptions, configFile })
                       }
                       rl.close()
                     }
@@ -154,11 +157,11 @@ const prompt = async () => {
           )
         })
       })
+      return true
     })
-
-    return { options: initOptions, configFile }
   } catch (error) {
     logger('error', `Initialisation aborted with errror: ${error}`)
+    return false
   }
 }
 
