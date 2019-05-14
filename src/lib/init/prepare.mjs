@@ -10,8 +10,11 @@ const initConfig = async ({ options, configFile }) => {
     const resolverDir = join(process.cwd(), resolvers)
     if (!existsSync(resolverDir)) {
       mkdirp(resolverDir)
-      writeFileSync(join(resolverDir, 'index.js'), '')
       logger('info', `init: Resolver directory created`)
+    }
+
+    if (existsSync(resolverDir)) {
+      writeFileSync(join(resolverDir, 'index.js'), '')
     }
 
     const fullSchema = join(process.cwd(), schema)
@@ -25,7 +28,7 @@ const initConfig = async ({ options, configFile }) => {
     }
     const fullConfig = join(process.cwd(), configFile)
     if (!existsSync(fullConfig)) {
-      writeFileSync(fullConfig, JSON.stringify(options))
+      writeFileSync(fullConfig, JSON.stringify(options, null, 2))
     } else {
       logger('error', `${fullConfig} already exists.`)
     }
