@@ -16,17 +16,17 @@ const configOptions = async configFile => {
     resolvers: './src/resolvers',
     external: false,
     rollup: {
+      resolve: {
+        module: false,
+        main: true,
+        extensions: ['.mjs', '.js', '.json'],
+        preferBuiltins: true
+      },
+      json: {
+        preferConst: true
+      },
+      commonjs: {},
       babel: {
-        resolve: {
-          module: false,
-          main: true,
-          extensions: ['.mjs', '.js', '.json'],
-          preferBuiltins: true
-        },
-        json: {
-          preferConst: true
-        },
-        commonjs: {},
         presets: [
           [
             '@babel/preset-env',
