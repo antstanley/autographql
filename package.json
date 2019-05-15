@@ -46,12 +46,14 @@
   "author": "Ant Stanley",
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.4.3",
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-syntax-import-meta": "^7.2.0",
-    "@babel/preset-env": "^7.4.3",
+    "@babel/plugin-transform-destructuring": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "chalk": "^2.4.2",
     "chokidar": "^2.1.5",
-    "graphql": "^14.2.1",
+    "graphql": "^14.3.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "object-keys": "^1.1.1",
@@ -61,12 +63,10 @@
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-node-resolve": "^3.4.0",
-    "yaml": "^1.5.0"
+    "yaml": "^1.5.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.3",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/plugin-transform-destructuring": "^7.4.3",
+    "@babel/cli": "^7.4.4",
     "ava": "1.0.0-rc.2",
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
