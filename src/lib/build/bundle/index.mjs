@@ -1,7 +1,9 @@
 import bundleProject from './bundleProject'
 import copyFunc from './copyFunc'
+import copyAzureFunc from './copyAzureFunc'
 import copyExternal from './copyExternal'
 import { logger } from '../../utils'
+import zipFunction from './zipFunction'
 
 const bundleGraphQL = async (functionManifest, rollupConfig) => {
   try {
@@ -21,8 +23,23 @@ const bundleGraphQL = async (functionManifest, rollupConfig) => {
             provider,
             name
           } = options
+          let bundledFunction = false
           if (functionConfig.dist) {
-            await copyFunc({ functionConfig, output, provider, name })
+            if (functionConfig.provider === 'azure') {
+              bundledFunction = await copyAzureFunc({
+                functionConfig,
+                output,
+                provider,
+                name
+              })
+            } else {
+              bundledFunction = await copyFunc({
+                functionConfig,
+                output,
+                provider,
+                name
+              })
+            }
           }
           if (external) {
             await copyExternal({
@@ -33,6 +50,10 @@ const bundleGraphQL = async (functionManifest, rollupConfig) => {
               output,
               functionConfig
             })
+          }
+          const zipFunc = functionConfig.zip ? functionConfig.zip : false
+          if (bundledFunction && zipFunc) {
+            await zipFunction(functionConfig.dist, name, provider)
           }
         }
       }

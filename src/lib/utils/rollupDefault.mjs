@@ -97,61 +97,70 @@ const setWarning = async (warningArray, warningDefault) => {
 }
 
 const bundleOptions = async (rollupOptions, input) => {
-  let resolveOptions = {
-    module: false,
-    main: true,
-    extensions: ['.mjs', '.js', '.json'],
-    preferBuiltins: true
-  }
-  let jsonOptions = {
-    preferConst: true
-  }
-  let commonjsOptions = {}
-  let babelOptions = {
-    presets: [
-      [
-        '@babel/preset-env',
-        {
-          targets: {
-            node: '8'
+  try {
+    let resolveOptions = {
+      mainFields: ['module', 'main'],
+      extensions: ['.mjs', '.js', '.json'],
+      preferBuiltins: true
+    }
+    let jsonOptions = {
+      preferConst: true
+    }
+    let commonjsOptions = {}
+    let babelOptions = {
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: {
+              node: '8'
+            }
+          }
+        ]
+      ],
+      plugins: ['@babel/plugin-syntax-import-meta']
+    }
+    let externalOptions = []
+    let warningOptions = ['CIRCULAR_DEPENDENCY']
+
+    if (rollupOptions) {
+      resolveOptions = await setResolve(rollupOptions.resolve, resolveOptions)
+      jsonOptions = await setJson(rollupOptions.json, jsonOptions)
+      commonjsOptions = await setCommonjs(
+        rollupOptions.commonjs,
+        commonjsOptions
+      )
+      babelOptions = await setBabel(rollupOptions.babel, babelOptions)
+      externalOptions = await setExternal(
+        rollupOptions.external,
+        externalOptions
+      )
+      warningOptions = await setWarning(rollupOptions.warning, warningOptions)
+    }
+
+    const inputOptions = {
+      input,
+      external: externalOptions,
+      plugins: [
+        resolve(resolveOptions),
+        json(jsonOptions),
+        commonjs(commonjsOptions),
+        babel(babelOptions)
+      ],
+      onwarn (warning, warn) {
+        if (Array.isArray(warningOptions)) {
+          if (warningOptions.includes(warning.code)) {
+            return
           }
         }
-      ]
-    ],
-    plugins: ['@babel/plugin-syntax-import-meta']
-  }
-  let externalOptions = []
-  let warningOptions = ['CIRCULAR_DEPENDENCY']
-
-  if (rollupOptions) {
-    resolveOptions = await setResolve(rollupOptions.resolve, resolveOptions)
-    jsonOptions = await setJson(rollupOptions.json, jsonOptions)
-    commonjsOptions = await setCommonjs(rollupOptions.commonjs, commonjsOptions)
-    babelOptions = await setBabel(rollupOptions.babel, babelOptions)
-    externalOptions = await setExternal(rollupOptions.external, externalOptions)
-    warningOptions = await setWarning(rollupOptions.warning, warningOptions)
-  }
-
-  const inputOptions = {
-    input,
-    external: externalOptions,
-    plugins: [
-      resolve(resolveOptions),
-      json(jsonOptions),
-      commonjs(commonjsOptions),
-      babel(babelOptions)
-    ],
-    onwarn (warning, warn) {
-      if (Array.isArray(warningOptions)) {
-        if (warningOptions.includes(warning.code)) {
-          return
-        }
+        warn(warning)
       }
-      warn(warning)
     }
-  }
 
-  return inputOptions
+    return inputOptions
+  } catch (error) {
+    logger('error', `rollupDefault: ${error}`)
+  }
 }
 
 export default bundleOptions

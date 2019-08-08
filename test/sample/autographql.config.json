@@ -15,20 +15,25 @@
             "provider": "aws"
         },
         {
-            "provider": "now"
+            "provider": "now",
+            "dist": "./dist/now"
         },
         {
-            "provider": "ibm"
+            "provider": "ibm",
+            "dist": "./dist/ibm"
         },
         {
-            "provider": "gcp"
+            "provider": "gcp",
+            "dist": "./dist/gcp"
         },
         {
-            "provider": "azure"
+            "provider": "azure",
+            "dist": "./dist/azure",
+            "zip": true
         },
         {
             "provider": "netlify",
-            "dist": "./dist"
+            "dist": "./dist/netlify"
         }
     ],
     "dev": {

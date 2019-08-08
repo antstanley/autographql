@@ -50,7 +50,11 @@ const copyExternal = async ({
     logger('info', `${provider} - ${name}: Copying external data`)
 
     const inputDir = join(dirname(input), 'resolvers')
-    const dist = functionConfig.dist ? functionConfig.dist : false
+    const dist = functionConfig.dist
+      ? provider === 'azure'
+        ? join(functionConfig.dist, name)
+        : functionConfig.dist
+      : false
 
     if (Array.isArray(external)) {
       const arrLength = external.length

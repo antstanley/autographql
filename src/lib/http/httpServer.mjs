@@ -42,7 +42,8 @@ const httpServer = (port, resolvers, schema) => {
         res.writeHead(204, {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'POST',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Headers':
+            'Content-Type, Authorization, x-apollo-tracing',
           'Access-Control-Max-Age': '3600',
           Vary: 'Access-Control-Request-Headers'
         })

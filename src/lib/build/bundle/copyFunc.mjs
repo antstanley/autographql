@@ -1,7 +1,8 @@
-import { copyFileSync, mkdirSync, lstatSync, existsSync } from 'fs'
+import { copyFileSync, lstatSync, existsSync } from 'fs'
 import { join } from 'path'
 import { logger } from '../../utils'
 import setDistDir from './setDestDir'
+import mkdirp from 'mkdirp'
 
 const copyFunc = async ({ output, functionConfig, provider, name }) => {
   try {
@@ -28,12 +29,15 @@ const copyFunc = async ({ output, functionConfig, provider, name }) => {
         return false
       }
     } else {
-      mkdirSync(fileDestDir)
+      mkdirp.sync(fileDestDir)
       copyFileSync(fileSrc, fileDest)
       return true
     }
   } catch (error) {
-    logger('warn', `Unable to copy function to location with error: ${error}`)
+    logger(
+      'warn',
+      `${provider} - ${name}: Unable to copy function to location with error: ${error}`
+    )
     return false
   }
 }

@@ -6,5 +6,8 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 10,
     sourceType: 'module'
+  },
+  rules: {
+    'no-unsafe-finally': 'off'
   }
 }
