@@ -35,11 +35,14 @@ const setFuncOptions = funcOpts => {
       {
         type: 'httpTrigger',
         direction: 'in',
-        authLevel: 'anonymous'
+        authLevel: 'anonymous',
+        name: 'req',
+        methods: ['get', 'post']
       },
       {
         type: 'http',
-        direction: 'out'
+        direction: 'out',
+        name: 'res'
       }
     ]
   }
