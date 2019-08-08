@@ -28,7 +28,8 @@
     "build:mjs": "npm run build:js -- --env-name mjs --out-dir lib && ./renameJStoMJS.sh",
     "build:template": "cp -r src/template template",
     "prepare": "npm run build",
-    "test": "ava"
+    "test": "ava",
+    "e2e": "./bin/autographql.js bundle -c ./test/sample/autographql.config.json"
   },
   "keywords": [
     "graphql",

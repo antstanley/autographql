@@ -28,12 +28,14 @@ const getFiles = async rootFolder => {
 const createArchive = async (sourceDir, name, provider) => {
   let result = false
   try {
-    const fileList = await getFiles(sourceDir)
+    const normalizedSourceDir = path.normalize(sourceDir)
+    const fileList = await getFiles(normalizedSourceDir)
 
     const archive = archiver('zip', {
       zlib: { level: 9 }
     })
     const archiveName = path.join(sourceDir, '..', `${provider}${name}.zip`)
+
     const outputFile = fs.createWriteStream(archiveName)
 
     outputFile.on('close', function () {
@@ -65,11 +67,10 @@ const createArchive = async (sourceDir, name, provider) => {
     // pipe archive data to the file
     archive.pipe(outputFile)
 
-    const rootLength = sourceDir.length + 1
+    const rootLength = normalizedSourceDir.length + 1
 
     for (let i = 0; i < fileList.length; i++) {
       const fileName = fileList[i].slice(rootLength)
-
       const stat = fs.lstatSync(fileList[i])
       if (stat.isDirectory()) {
         archive.directory(fileList[i], fileName)
