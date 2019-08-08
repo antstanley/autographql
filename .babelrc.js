@@ -11,8 +11,7 @@ module.exports = {
       plugins: ['@babel/plugin-transform-destructuring'],
       ignore: [
         'src/lib/http/gqlFunction.mjs',
-        'src/lib/build/prepare/functions/setTemplateLocation.mjs',
-        'src/lib/build/bundle/setDistDir.mjs'
+        'src/lib/build/prepare/functions/setTemplateLocation.mjs'
       ]
     },
     mjs: {
