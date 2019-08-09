@@ -100,9 +100,15 @@ class devServer {
 
   stopServer () {
     try {
-      this.server.close()
-    } finally {
+      if (this.server) {
+        this.server.close()
+      } else {
+        this.server = null
+      }
+
       return true
+    } catch (error) {
+      return false
     }
   }
 
