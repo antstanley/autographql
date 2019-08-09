@@ -93,22 +93,34 @@ class devServer {
     }
   }
 
-  startServer () {
-    this.server.listen(this.port)
-    return true
+  async startServer () {
+    try {
+      this.server.listen(this.port)
+      return true
+    } catch (error) {
+      logger('error', `dev: Unable to start server with error\n${error}`)
+    }
   }
 
-  stopServer () {
+  async stopServer () {
+    let stopResult
     try {
       if (this.server) {
         this.server.close()
       } else {
+        logger('warn', 'dev: Server does not exist')
         this.server = null
       }
 
-      return true
+      this.server.on('close', () => {
+        logger('info', 'dev: http server reloading ...')
+      })
+      stopResult = true
     } catch (error) {
-      return false
+      logger('error', `dev: Unable to stop server with error\n${error}`)
+      stopResult = false
+    } finally {
+      return stopResult
     }
   }
 

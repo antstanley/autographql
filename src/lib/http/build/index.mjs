@@ -25,25 +25,27 @@ const buildHttp = async ({ root, schema, resolvers, external, rollup }) => {
       const randomIdx = getRandomInt(9999)
       const resolverLoc = `${resolverDest}/index${randomIdx}.js`
 
-      const bundleResponse = await bundleResolvers(
-        resolvers,
-        resolverLoc,
-        rollup
-      )
-
-      if (bundleResponse) {
-        if (external) {
-          if (Array.isArray(external)) {
-            if (external.length > 0) {
-              await copyExternal({
-                external,
-                output: resolverDest,
-                input: resolvers
-              })
-            }
+      if (external) {
+        if (Array.isArray(external)) {
+          if (external.length > 0) {
+            await copyExternal({
+              external,
+              output: resolverDest,
+              input: resolvers
+            })
           }
         }
-        return { schemaLoc, resolverLoc }
+
+        const bundleResponse = await bundleResolvers(
+          resolvers,
+          resolverLoc,
+          rollup
+        )
+        if (bundleResponse) {
+          return { schemaLoc, resolverLoc }
+        } else {
+          return false
+        }
       } else {
         return false
       }
