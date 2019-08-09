@@ -5,7 +5,7 @@ import chokidar from 'chokidar'
 const initHttpServer = async options => {
   try {
     const { resolvers, schema } = options
-    let newServer = new DevServer(options)
+    const newServer = new DevServer(options)
 
     if (newServer.initServer()) {
       const watcher = chokidar.watch([resolvers, schema])

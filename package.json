@@ -29,7 +29,8 @@
     "build:template": "cp -r src/template template",
     "prepare": "npm run build",
     "test": "ava",
-    "e2e": "./bin/autographql.js bundle -c ./test/sample/autographql.config.json"
+    "e2e": "./bin/autographql.js bundle -c ./test/sample/autographql.config.json",
+    "e2e:dev": "./bin/autographql.js dev -c ./test/sample/autographql.config.json"
   },
   "keywords": [
     "graphql",

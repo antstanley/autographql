@@ -3,8 +3,7 @@
     "root": "./",
     "schema": "./test/sample/schema/starwars.gql",
     "resolvers": "./test/sample/resolvers",
-    "external": [],
-    "files": [
+    "external": [
         "package.json",
         "data"
     ],

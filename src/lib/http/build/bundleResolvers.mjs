@@ -1,18 +1,19 @@
 import { rollup } from 'rollup'
-import { existsSync, writeFileSync } from 'fs'
+import { existsSync } from 'fs'
 import { logger, rollupDefault } from '../../utils'
 
-async function build (inputOptions, outputOptions, outputLoc) {
-  // create a bundle
+async function build (inputOptions, outputOptions) {
   try {
+    // create a bundle
     const bundle = await rollup(inputOptions)
-    const { code } = await bundle.generate(outputOptions)
-    writeFileSync(outputLoc, code)
+    // generate code & write bundled code
+    await bundle.write(outputOptions)
     logger('info', `dev: http server ready!`)
+    return true
   } catch (error) {
-    logger('error', `dev: function bundle failed with error: ${error}`)
+    logger('error', `bundleProject/build: ${error}`)
+    return false
   }
-  return true
 }
 
 export default async (resolver, outputLoc, rollupConfig) => {
@@ -25,10 +26,11 @@ export default async (resolver, outputLoc, rollupConfig) => {
       const inputOptions = await rollupDefault(rollupConfig, input)
 
       const outputOptions = {
-        format: 'cjs'
+        format: 'cjs',
+        file: outputLoc
       }
 
-      return build(inputOptions, outputOptions, outputLoc)
+      return build(inputOptions, outputOptions)
     } else {
       logger('warn', `Path to ${resolver} doesn't exit`)
       return null

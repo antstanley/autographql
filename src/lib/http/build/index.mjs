@@ -8,7 +8,7 @@ const getRandomInt = max => {
   return Math.floor(Math.random() * Math.floor(max))
 }
 
-const buildHttp = ({ root, schema, resolvers, external, rollup }) => {
+const buildHttp = async ({ root, schema, resolvers, external, rollup }) => {
   try {
     const buildDestination = root.endsWith('/') ? `${root}http` : `${root}/http`
     const resolverDest = `${buildDestination}/resolvers`
@@ -25,20 +25,34 @@ const buildHttp = ({ root, schema, resolvers, external, rollup }) => {
       const randomIdx = getRandomInt(9999)
       const resolverLoc = `${resolverDest}/index${randomIdx}.js`
 
-      if (bundleResolvers(resolvers, resolverLoc, rollup)) {
+      const bundleResponse = await bundleResolvers(
+        resolvers,
+        resolverLoc,
+        rollup
+      )
+
+      if (bundleResponse) {
         if (external) {
-          copyExternal({ external, output: resolverDest, input: resolvers })
+          if (Array.isArray(external)) {
+            if (external.length > 0) {
+              await copyExternal({
+                external,
+                output: resolverDest,
+                input: resolvers
+              })
+            }
+          }
         }
         return { schemaLoc, resolverLoc }
       } else {
-        return null
+        return false
       }
     } else {
-      return null
+      return false
     }
   } catch (error) {
     logger('error', `Unable to build http server with error: \n${error}`)
-    return null
+    return false
   }
 }
 

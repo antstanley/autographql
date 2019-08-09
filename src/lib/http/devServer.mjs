@@ -16,29 +16,35 @@ class devServer {
     this.server = null
   }
 
-  buildFunction () {
-    this.server = null
-    const { resolverLoc, schemaLoc } = buildHttp({
-      root: this.root,
-      schema: this.schema,
-      resolvers: this.resolvers,
-      external: this.external,
-      rollup: this.rollup
-    })
-
-    return { resolverLoc, schemaLoc }
+  async buildFunction () {
+    try {
+      this.server = null
+      const buildResponse = await buildHttp({
+        root: this.root,
+        schema: this.schema,
+        resolvers: this.resolvers,
+        external: this.external,
+        rollup: this.rollup
+      })
+      return buildResponse
+    } catch (error) {
+      logger('error', `dev: Unable to build server with error\n${error}`)
+      return false
+    }
   }
 
-  createServer ({ resolverLoc, schemaLoc }) {
-    this.server = http.createServer((req, res) => {
-      let reqData = ''
-      if (req.method === 'POST') {
-        req.on('data', chunk => {
-          reqData += chunk
-        })
-        req.on('error', error => logger('error', `http: ${error}`))
-        req.on('end', async () => {
-          /*
+  createServer (serverOpts) {
+    if (serverOpts) {
+      const { resolverLoc, schemaLoc } = serverOpts
+      this.server = http.createServer((req, res) => {
+        let reqData = ''
+        if (req.method === 'POST') {
+          req.on('data', chunk => {
+            reqData += chunk
+          })
+          req.on('error', error => logger('error', `http: ${error}`))
+          req.on('end', async () => {
+            /*
           if (req.headers.authorization) {
             console.time('auth')
             const authHeader = req.headers.authorization
@@ -51,37 +57,40 @@ class devServer {
             console.timeEnd('auth')
           }
           */
-          const reqJSON = JSON.parse(reqData)
-          const operationName = reqJSON.operationName || reqJSON.query
-          const response = await gqlFunction(reqJSON, resolverLoc, schemaLoc)
-          res.writeHead(200, {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
+            const reqJSON = JSON.parse(reqData)
+            const operationName = reqJSON.operationName || reqJSON.query
+            const response = await gqlFunction(reqJSON, resolverLoc, schemaLoc)
+            res.writeHead(200, {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json'
+            })
+            res.write(response, 'utf8')
+            res.end(() => {
+              logger('info', `Response to: ${operationName}`)
+            })
           })
-          res.write(response, 'utf8')
-          res.end(() => {
-            logger('info', `Response to: ${operationName}`)
-          })
-        })
-      } else {
-        if (req.method === 'OPTIONS') {
-          res.writeHead(204, {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST',
-            'Access-Control-Allow-Headers':
-              'Content-Type, Authorization, x-apollo-tracing',
-            'Access-Control-Max-Age': '3600',
-            Vary: 'Access-Control-Request-Headers'
-          })
-          res.end()
         } else {
-          res.writeHead(405, { 'Content-Type': 'text/html' })
-          res.end('405 - Method not supported')
+          if (req.method === 'OPTIONS') {
+            res.writeHead(204, {
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'POST',
+              'Access-Control-Allow-Headers':
+                'Content-Type, Authorization, x-apollo-tracing',
+              'Access-Control-Max-Age': '3600',
+              Vary: 'Access-Control-Request-Headers'
+            })
+            res.end()
+          } else {
+            res.writeHead(405, { 'Content-Type': 'text/html' })
+            res.end('405 - Method not supported')
+          }
         }
-      }
-    })
+      })
 
-    return true
+      return true
+    } else {
+      return false
+    }
   }
 
   startServer () {
@@ -94,9 +103,11 @@ class devServer {
     return true
   }
 
-  initServer () {
-    if (this.createServer(this.buildFunction())) {
+  async initServer () {
+    if (this.createServer(await this.buildFunction())) {
       return this.startServer()
+    } else {
+      return false
     }
   }
 }
