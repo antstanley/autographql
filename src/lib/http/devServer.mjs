@@ -107,14 +107,13 @@ class devServer {
     try {
       if (this.server) {
         this.server.close()
+        this.server.on('close', () => {
+          logger('info', 'dev: http server reloading ...')
+        })
       } else {
         logger('warn', 'dev: Server does not exist')
-        this.server = null
       }
 
-      this.server.on('close', () => {
-        logger('info', 'dev: http server reloading ...')
-      })
       stopResult = true
     } catch (error) {
       logger('error', `dev: Unable to stop server with error\n${error}`)

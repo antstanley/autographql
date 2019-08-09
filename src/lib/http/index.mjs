@@ -11,9 +11,10 @@ const initHttpServer = async options => {
       const watcher = chokidar.watch([resolvers, schema])
 
       watcher.on('ready', () => {
-        watcher.on('change', () => {
+        watcher.on('change', async () => {
           logger('info', `dev: Files changed, rebuilding function`)
-          if (newServer.stopServer()) {
+          const halt = await newServer.stopServer()
+          if (halt) {
             newServer.initServer()
           }
         })

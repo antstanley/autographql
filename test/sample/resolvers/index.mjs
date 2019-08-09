@@ -1,7 +1,6 @@
 import StarWarsData from './starwars/data.mjs'
 
 const human = (args, context) => {
-  // console.log(StarWarsData.human)
   return StarWarsData.human[args.id]
 }
 
