@@ -99,8 +99,11 @@ class devServer {
   }
 
   stopServer () {
-    this.server.close()
-    return true
+    try {
+      this.server.close()
+    } finally {
+      return true
+    }
   }
 
   async initServer () {
