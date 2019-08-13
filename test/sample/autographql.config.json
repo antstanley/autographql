@@ -2,7 +2,7 @@
     "name": "graphql",
     "root": "./",
     "schema": "./test/sample/schema/starwars.gql",
-    "resolvers": "./test/sample/resolvers",
+    "resolvers": "./test/sample/resolvers/index.js",
     "external": [
         "package.json",
         "data"

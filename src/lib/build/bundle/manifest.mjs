@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, lstatSync } from 'fs'
+import { existsSync, readdirSync } from 'fs'
 
 export default async rootDir => {
   const functionsDir = `${rootDir}/build/functions`
@@ -6,17 +6,14 @@ export default async rootDir => {
 
   if (rootArray.length <= 0) throw new Error('Invalid root path')
 
-  let manifestArray = []
+  const manifestArray = []
   let i
 
   for (i = 0; i < rootArray.length; i++) {
     const functionRoot = `${functionsDir}/${rootArray[i]}`
-    // console.log(`iteration: ${i}, root: ${functionRoot}`)
-    if (lstatSync(functionRoot).isDirectory()) {
-      if (existsSync(`${functionRoot}/index.mjs`)) {
-        manifestArray.push(rootArray[i])
-        // console.log(`${rootArray[i]} added to manifest`)
-      }
+
+    if (existsSync(functionRoot)) {
+      manifestArray.push(rootArray[i])
     }
   }
 

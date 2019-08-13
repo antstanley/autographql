@@ -2,7 +2,8 @@ import { copyFolderRecursiveSync, logger } from '../../utils'
 import { dirname, join } from 'path'
 import { existsSync, lstatSync, copyFileSync } from 'fs'
 
-const copyFilesFolders = async (inputDir, output, external) => {
+const copyFilesFolders = async (input, output, external) => {
+  const inputDir = lstatSync(input).isFile() ? dirname(input) : input
   const source = join(inputDir, external)
   if (existsSync(source)) {
     if (lstatSync(source).isDirectory()) {
@@ -18,15 +19,14 @@ const copyFilesFolders = async (inputDir, output, external) => {
 const copyExternal = async ({ external, input, output }) => {
   try {
     logger('info', `dev: Copying external data`)
-    const inputDir = join(dirname(input), 'resolvers')
     if (Array.isArray(external)) {
       const arrLength = external.length
       for (let i = 0; i < arrLength; i++) {
-        await copyFilesFolders(inputDir, output, external[i])
+        await copyFilesFolders(input, output, external[i])
       }
       return true
     } else {
-      await copyFilesFolders(inputDir, output, external)
+      await copyFilesFolders(input, output, external)
     }
   } catch (error) {
     logger('warn', `Unable to copy external data with error:\n${error}`)

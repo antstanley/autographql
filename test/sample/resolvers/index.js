@@ -1,4 +1,4 @@
-import StarWarsData from './starwars/data.mjs'
+import StarWarsData from './starwars/data'
 
 const human = (args, context) => {
   return StarWarsData.human[args.id]

@@ -10,7 +10,7 @@ const prepare = async ({
   external
 }) => {
   try {
-    let functionManifest = []
+    const functionManifest = []
     if (createStructure(root)) {
       functions.forEach(functionConfig => {
         functionManifest.push(

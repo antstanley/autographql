@@ -1,5 +1,5 @@
 import { rollup } from 'rollup'
-import { existsSync } from 'fs'
+import { existsSync, lstatSync } from 'fs'
 import { logger, rollupDefault } from '../../utils'
 
 async function build (inputOptions, outputOptions) {
@@ -20,7 +20,9 @@ export default async (resolver, outputLoc, rollupConfig) => {
   //  console.log(output)
   logger('info', `dev: Generating bundled resolver ...`)
   try {
-    const input = `${resolver}/index.mjs`
+    const input = lstatSync(resolver).isFile()
+      ? resolver
+      : `${resolver}/index.mjs`
     // bundle
     if (existsSync(resolver)) {
       const inputOptions = await rollupDefault(rollupConfig, input)
