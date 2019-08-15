@@ -1,6 +1,7 @@
 import StarWarsData from './starwars/data'
 
 const human = (args, context) => {
+  console.log(context)
   return StarWarsData.human[args.id]
 }
 

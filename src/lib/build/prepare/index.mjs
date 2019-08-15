@@ -7,6 +7,7 @@ const prepare = async ({
   resolvers,
   name,
   functions,
+  openid,
   external
 }) => {
   try {
@@ -20,6 +21,7 @@ const prepare = async ({
             resolvers,
             functionName: name,
             functionConfig,
+            openid,
             external
           })
         )

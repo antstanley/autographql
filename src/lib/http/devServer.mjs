@@ -1,8 +1,7 @@
 import http from 'http'
-import { logger } from '../utils'
+import { logger, validateOpenId } from '../utils'
 import gqlFunction from './gqlFunction'
 import buildHttp from './build'
-import validateOpenId from './validateOpenId'
 
 class devServer {
   constructor (options) {
@@ -57,6 +56,9 @@ class devServer {
                 const authHeader = req.headers.authorization
                 const token = authHeader.substr(7)
                 queryContext['jwt'] = await validateOpenId(token, this.openid)
+                if (!queryContext.jwt.valid) {
+                  logger('warn', 'dev: Token Validation Failed')
+                }
               } else {
                 queryContext['jwt'] = {
                   valid: false,

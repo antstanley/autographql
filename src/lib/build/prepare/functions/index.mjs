@@ -1,6 +1,7 @@
 import copyResolvers from './copyResolvers'
-import prepareDeploy from './prepareDeploy'
+import copyLibraries from './copyLibraries'
 import { readFileSync, mkdirSync, writeFileSync } from 'fs'
+import { join } from 'path'
 import { logger } from '../../../utils'
 import setTemplateLocation from './setTemplateLocation'
 
@@ -10,6 +11,7 @@ const createFunction = ({
   resolvers,
   functionName,
   functionConfig,
+  openid,
   external
 }) => {
   try {
@@ -42,21 +44,42 @@ const createFunction = ({
         throw new Error('Unable to inject schema into function')
       }
       logger('info', `${provider} - ${name}: Writing function`)
-      writeFileSync(`${functionLocation}/index.mjs`, providerFunction)
-      prepareDeploy({ name, functionName, functionLocation })
 
-      return {
-        name,
-        provider,
-        distName: `${root}/dist/functions/${provider}`,
-        input: `${functionLocation}/index.mjs`,
-        output: `${root}/dist/functions/${provider}/${name}/`,
-        functionConfig,
-        external
+      // write function to build directory
+      writeFileSync(`${functionLocation}/index.mjs`, providerFunction)
+
+      // write function configuration options
+      const config = {
+        openid
+      }
+      writeFileSync(
+        join(functionLocation, 'config.json'),
+        JSON.stringify(config)
+      )
+
+      // copy default libraries needed by autographql
+      const libArray = ['../../../utils/validateOpenId.mjs']
+      const copyLibResult = copyLibraries(libArray, functionLocation)
+      if (copyLibResult) {
+        return {
+          name,
+          provider,
+          distName: `${root}/dist/functions/${provider}`,
+          input: `${functionLocation}/index.mjs`,
+          output: `${root}/dist/functions/${provider}/${name}/`,
+          functionConfig,
+          openid,
+          external
+        }
+      } else {
+        return null
       }
     }
   } catch (error) {
-    logger('error', `Unable to create function with Error: ${error}`)
+    logger(
+      'error',
+      `createFunction: Unable to create function with Error: ${error}`
+    )
     return null
   }
 }

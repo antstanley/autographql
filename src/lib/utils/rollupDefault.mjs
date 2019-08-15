@@ -120,7 +120,15 @@ const bundleOptions = async (rollupOptions, input) => {
       ],
       plugins: ['@babel/plugin-syntax-import-meta']
     }
-    let externalOptions = []
+    let externalOptions = [
+      'stream',
+      'url',
+      'http',
+      'https',
+      'crypto',
+      'buffer',
+      'zlib'
+    ]
     let warningOptions = ['CIRCULAR_DEPENDENCY']
 
     if (rollupOptions) {

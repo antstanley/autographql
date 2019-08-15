@@ -1,16 +1,37 @@
 import { parse, execute, buildSchema } from 'graphql'
 import resolvers from './resolvers'
+import config from './config.json'
+import validateOpenId from './validateOpenId'
 let gqlSchema
 
-const handler = async (event, context, callback) => {
+const handler = async (event, _, callback) => {
   try {
-    const body = event.body
-    console.log(event)
     const gqlSDL = `__SDL__ `
 
-    const bodyJSON = JSON.parse(body)
-    console.log(bodyJSON)
-    if (!bodyJSON.query) {
+    const body = JSON.parse(event.body)
+
+    const context = {
+      req: event,
+      body
+    }
+
+    if (config.openid) {
+      const { headers } = event
+      if (headers['Authorization']) {
+        const authHeader = headers['Authorization']
+        const token = authHeader.substr(7)
+        context['jwt'] = await validateOpenId(token, config.openid)
+        console.log('Token Validation Failed')
+      }
+    } else {
+      context['jwt'] = {
+        valid: false,
+        token: null,
+        decoded: null
+      }
+    }
+
+    if (!body.query) {
       const response = {
         statusCode: 400,
         body: JSON.stringify('No query specified')
@@ -21,19 +42,16 @@ const handler = async (event, context, callback) => {
         console.log('Init Schema')
         gqlSchema = buildSchema(gqlSDL)
       }
-      // const bodyJSON = JSON.parse(body)
-      // console.log(bodyJSON)
-      const { query, variables } = bodyJSON
+
+      const { query, variables } = body
 
       const queryDoc = parse(query)
       if (queryDoc) {
-        const gqlContext = event.header || null
-
         const gqlResponse = await execute(
           gqlSchema,
           queryDoc,
           resolvers,
-          gqlContext,
+          context,
           variables
         )
         const response = {

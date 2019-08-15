@@ -1,11 +1,33 @@
 import { graphql, buildSchema } from 'graphql'
 import resolvers from './resolvers'
+import config from './config.json'
+import validateOpenId from './validateOpenId'
 let gqlSchema
 
 const handler = async (req, res) => {
   const body = req.body
 
   const gqlSDL = `__SDL__`
+
+  const context = {
+    req,
+    body
+  }
+
+  if (config.openid) {
+    const authHeader = req.get('Authorization')
+    if (authHeader) {
+      const token = authHeader.substr(7)
+      context['jwt'] = await validateOpenId(token, config.openid)
+      console.log('Token Validation Failed')
+    }
+  } else {
+    context['jwt'] = {
+      valid: false,
+      token: null,
+      decoded: null
+    }
+  }
 
   if (!body.query) {
     const response = {
@@ -17,10 +39,6 @@ const handler = async (req, res) => {
     if (!gqlSchema) gqlSchema = buildSchema(gqlSDL)
 
     const { query, variables } = body
-
-    const authToken = req.get('Authorization')
-
-    const context = authToken ? { authToken } : false
 
     const response = await graphql(
       gqlSchema,
