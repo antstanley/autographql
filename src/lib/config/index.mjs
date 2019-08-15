@@ -14,6 +14,7 @@ const configOptions = async configFile => {
     root: './.autographql/',
     schema: './src/schema/schema.gql',
     resolvers: './src/resolvers',
+    openid: false,
     external: false,
     rollup: {
       resolve: {
@@ -57,8 +58,8 @@ const configOptions = async configFile => {
   const config = configFile ? await loadConfig(configFile) : false
 
   if (config) {
-    for (let setting in configDefaults) {
-      if (config.hasOwnProperty(setting)) {
+    for (const setting in configDefaults) {
+      if (typeof config[setting] !== 'undefined') {
         if (setting === 'root') {
           // this bit is to make sure the root of the .autographql folder where build assets isn't the root of the project... otherwise the build will remove the whole project, which is less than ideal.. not that it ever happened to me, not at all...
           if (config[setting].indexOf('.autographql') === -1) {
@@ -94,7 +95,7 @@ const configOptions = async configFile => {
     options.dev = devDefaults
   }
 
-  for (let setting in options) {
+  for (const setting in options) {
     if (setting === 'root' || setting === 'schema' || setting === 'resolvers') {
       options[setting] = join(projectRoot, options[setting])
     }

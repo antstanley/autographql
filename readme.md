@@ -10,7 +10,7 @@ The CLI has two commands
 
 ### Developement
 
-```
+```sh
 npx autographql dev -c ./autograph.config.json
 ```
 
@@ -18,24 +18,27 @@ Starts a local development server on local host.
 
 ### Bundle
 
-```
+```sh
 npx autograpqhl bundle -c ./autograph.config.json
 ```
 
-Takes your schema and resolver code combines it with provider specific function code and outputs a bundled function. 
+Takes your schema and resolver code combines it with provider specific function code and outputs a bundled function.
 
 ## Configuration
 
 The cli only accepts one argument, `-c` which specifies the location of the configuration file.
 
-The configuration file can the JSON or YAML. Below is a sample conifguration file
+The configuration file must be JSON. If `-c` is not specified autographql will attempt to load `autographql.config.json`. Below is a sample conifguration file
 
-```
+```json
 {
     "name": "graphql",
     "root": "./",
     "schema": "./src/schema/starwars.gql",
     "resolvers": "./src/resolvers",
+    "openid": {
+        "jwksUri": "https://<openid-tenant>/.well-known/jwks.json"
+    },
     "external": [
         "package.json",
         "data"
@@ -55,7 +58,8 @@ The configuration file can the JSON or YAML. Below is a sample conifguration fil
         },
         {
             "name": "netlify",
-            "dist": "./dist/netlify"
+            "dist": "./dist/netlify",
+            "zip": true
         }
     ],
     "dev": {
@@ -74,13 +78,19 @@ The configuration file can the JSON or YAML. Below is a sample conifguration fil
 
 `resolvers` (String) - Relative location of the resolver functions. Expects a folder with an `index.mjs` file and any other dependencies in it. The resolver functions must be written in JavaScript using ES module syntax. Default value is `src/resolvers/`.
 
+`openid` (Object) - Optional. Specifiy options to enable OpenID Connect authentication on the GraphQL API.
+  
+  `jwksUri` (String) - Url to the jwks.json file with the relevant key to validate a JWT token.
+
 `external` (Array) - An array of files and folders that need to be copied with the resolvers. The files need to be referenced relative to the resolvers location, and can include any file type. These files will be shipped with your function. Not required, and no default value.
 
 `providers` (Array) - Array of provider configuration objects consisting of the following options.
 
-  `name` - The provider name. Valid values are `aws`, `ibm`, `gcp`, `netlify`, `now`. More to be added later. Required.
+  `name` (String) - The provider name. Valid values are `aws`, `ibm`, `gcp`, `netlify`, `now`. More to be added later. Required.
 
-  `dist` - Relative location where to copy the final provider specific function for deployment. Not required. No default.
+  `dist` (String) - Relative location where to copy the final provider specific function for deployment. Not required. No default.
+
+  `zip` (Boolean) - Optional. Default value `false`. Must set`dist`. If set to true will create a zip file of the function in the root of the `dist` folder specified set above.
 
 `dev` (Object) - Configuration detail for the development server
   
@@ -91,13 +101,10 @@ The configuration file can the JSON or YAML. Below is a sample conifguration fil
 This project is not complete, and has a long and extensive backlog. Current backlog items to be completed before launch include.
 
 - Complete Test suite
-- Complete deployment integration with Serverless Framework & Architect Framework (arc.codes)
-- Add Azure & Cloudflare as providers
-- Add file watching and automatic restart for dev mode
+- Add Cloudflare as provider
 - Detailed documentation and website
 
 Post launch the following items are in the backlog.
-- Integrate with OpenID Connect providers for authentication
-- Init command for CLI
+
 - API defintion to allow consumption programatically
 - Resolver code generation

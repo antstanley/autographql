@@ -2,11 +2,11 @@ import http from 'http'
 import { logger } from '../utils'
 import gqlFunction from './gqlFunction'
 import buildHttp from './build'
-// import authenticate from '@esmodule/jwt-verify'
+import validateOpenId from './validateOpenId'
 
 class devServer {
   constructor (options) {
-    const { root, resolvers, schema, dev, external, rollup } = options
+    const { root, resolvers, schema, openid, dev, external, rollup } = options
     this.root = root
     this.resolvers = resolvers
     this.schema = schema
@@ -14,6 +14,7 @@ class devServer {
     this.rollup = rollup
     this.port = dev ? (dev.port ? dev.port : 7000) : 7000
     this.server = null
+    this.openid = openid || false
   }
 
   async buildFunction () {
@@ -47,29 +48,53 @@ class devServer {
           })
           req.on('error', error => logger('error', `http: ${error}`))
           req.on('end', async () => {
-            /*
-          if (req.headers.authorization) {
-            console.time('auth')
-            const authHeader = req.headers.authorization
-            const token = authHeader.substr(7)
-            const authResponse = await authenticate(token)
-            logger(
-              'info',
-              `authResponse: ${JSON.stringify(authResponse, null, 2)}`
-            )
-            console.timeEnd('auth')
-          }
-          */
+            const queryContext = {
+              req,
+              body: reqData
+            }
+            if (this.openid) {
+              if (req.headers.authorization) {
+                const authHeader = req.headers.authorization
+                const token = authHeader.substr(7)
+                queryContext['jwt'] = await validateOpenId(token, this.openid)
+              } else {
+                queryContext['jwt'] = {
+                  valid: false,
+                  token: null,
+                  decoded: null
+                }
+              }
+            }
+
             const reqJSON = JSON.parse(reqData)
             const operationName = reqJSON.operationName || reqJSON.query
-            const response = await gqlFunction(reqJSON, resolverLoc, schemaLoc)
+            const response = await gqlFunction(
+              reqJSON,
+              resolverLoc,
+              schemaLoc,
+              queryContext
+            )
             res.writeHead(200, {
               'Access-Control-Allow-Origin': '*',
               'Content-Type': 'application/json'
             })
             res.write(response, 'utf8')
             res.end(() => {
-              logger('info', `Response to: ${operationName}`)
+              if (!queryContext.jwt) {
+                logger('info', `dev: Response to: ${operationName}`)
+              } else {
+                if (queryContext.jwt.valid) {
+                  logger(
+                    'info',
+                    `dev: Authenticated response to: ${operationName}`
+                  )
+                } else {
+                  logger(
+                    'warn',
+                    `dev: Unauthenticated response to: ${operationName}`
+                  )
+                }
+              }
             })
           })
         } else {

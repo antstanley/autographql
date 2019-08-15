@@ -3,6 +3,9 @@
     "root": "./",
     "schema": "./test/sample/schema/starwars.gql",
     "resolvers": "./test/sample/resolvers/index.js",
+    "openid": {
+        "jwksUri": "https://senzo.eu.auth0.com/.well-known/jwks.json"
+    },
     "external": [
         "package.json",
         "data"

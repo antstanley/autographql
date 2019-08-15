@@ -2,7 +2,7 @@ const { graphql, buildSchema } = require('graphql')
 const fs = require('fs')
 const { logger } = require('../utils')
 
-const handler = async (params, resolvers, schema) => {
+const handler = async (params, resolvers, schema, context) => {
   try {
     const { query, variables } = params
 
@@ -12,7 +12,6 @@ const handler = async (params, resolvers, schema) => {
       return response
     } else {
       const gqlSchema = await buildSchema(fs.readFileSync(schema, 'utf-8'))
-      const context = null
       const resolverModule = require(resolvers)
       const response = await graphql(
         gqlSchema,

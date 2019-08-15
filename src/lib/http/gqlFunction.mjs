@@ -3,7 +3,7 @@ import { readFileSync } from 'fs'
 import { logger } from '../utils'
 // import resolverFunc from '../../test/sample/resolvers'
 
-const handler = async (params, resolvers, schema) => {
+const handler = async (params, resolvers, schema, context) => {
   try {
     const { query, variables } = params
 
@@ -19,8 +19,6 @@ const handler = async (params, resolvers, schema) => {
       const importedModule = await import(resolvers)
 
       const resolverModule = importedModule.default
-
-      const context = null
 
       const response = await graphql(
         gqlSchema,
