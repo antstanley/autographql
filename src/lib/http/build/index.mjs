@@ -8,7 +8,10 @@ const getRandomInt = max => {
   return Math.floor(Math.random() * Math.floor(max))
 }
 
-const buildHttp = async ({ root, schema, resolvers, external, rollup }) => {
+const buildHttp = async (
+  { root, schema, resolvers, external, rollup },
+  port
+) => {
   try {
     const buildDestination = root.endsWith('/') ? `${root}http` : `${root}/http`
     const resolverDest = `${buildDestination}/resolvers`
@@ -40,7 +43,8 @@ const buildHttp = async ({ root, schema, resolvers, external, rollup }) => {
       const bundleResponse = await bundleResolvers(
         resolvers,
         resolverLoc,
-        rollup
+        rollup,
+        port
       )
 
       if (bundleResponse) {

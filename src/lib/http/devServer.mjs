@@ -19,13 +19,16 @@ class devServer {
   async buildFunction () {
     try {
       this.server = null
-      const buildResponse = await buildHttp({
-        root: this.root,
-        schema: this.schema,
-        resolvers: this.resolvers,
-        external: this.external,
-        rollup: this.rollup
-      })
+      const buildResponse = await buildHttp(
+        {
+          root: this.root,
+          schema: this.schema,
+          resolvers: this.resolvers,
+          external: this.external,
+          rollup: this.rollup
+        },
+        this.port
+      )
       return buildResponse
     } catch (error) {
       logger('error', `dev: Unable to build server with error\n${error}`)
@@ -95,10 +98,15 @@ class devServer {
 
   async startServer () {
     try {
-      this.server.listen(this.port)
-      return true
+      if (this.server) {
+        this.server.listen(this.port)
+        return true
+      } else {
+        return false
+      }
     } catch (error) {
       logger('error', `dev: Unable to start server with error\n${error}`)
+      return false
     }
   }
 

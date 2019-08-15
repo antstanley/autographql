@@ -2,13 +2,13 @@ import { rollup } from 'rollup'
 import { existsSync, lstatSync } from 'fs'
 import { logger, rollupDefault } from '../../utils'
 
-async function build (inputOptions, outputOptions) {
+async function build (inputOptions, outputOptions, port) {
   try {
     // create a bundle
     const bundle = await rollup(inputOptions)
     // generate code & write bundled code
     await bundle.write(outputOptions)
-    logger('info', `dev: http server ready!`)
+    logger('info', `dev: http server ready on http://localhost:${port}`)
     return true
   } catch (error) {
     logger('error', `bundleProject/build: ${error}`)
@@ -16,7 +16,7 @@ async function build (inputOptions, outputOptions) {
   }
 }
 
-export default async (resolver, outputLoc, rollupConfig) => {
+export default async (resolver, outputLoc, rollupConfig, port) => {
   //  console.log(output)
   logger('info', `dev: Generating bundled resolver ...`)
   try {
@@ -32,7 +32,7 @@ export default async (resolver, outputLoc, rollupConfig) => {
         file: outputLoc
       }
 
-      return build(inputOptions, outputOptions)
+      return build(inputOptions, outputOptions, port)
     } else {
       logger('warn', `Path to ${resolver} doesn't exit`)
       return null
