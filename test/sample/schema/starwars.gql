@@ -1,3 +1,5 @@
+# import Episode from "episodes.gql"
+
 type Query {
   human(id: ID!): Human
   allHumans: [Human]
@@ -11,17 +13,6 @@ interface Character {
   friends: [Character]
   appearsIn: [Episode]
   secretBackstory: String
-}
-
-enum Episode {
-  PHANTOM
-  CLONES
-  SITH
-  NEWHOPE
-  EMPIRE
-  JEDI
-  FORCE
-  LASTJEDI
 }
 
 type Droid implements Character {
