@@ -1,0 +1,10 @@
+enum Episode {
+  PHANTOM
+  CLONES
+  SITH
+  NEWHOPE
+  EMPIRE
+  JEDI
+  FORCE
+  LASTJEDI
+}
