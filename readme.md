@@ -28,7 +28,7 @@ Takes your schema and resolver code combines it with provider specific function 
 
 The cli only accepts one argument, `-c` which specifies the location of the configuration file.
 
-The configuration file must be JSON. If `-c` is not specified autographql will attempt to load `autographql.config.json`. Below is a sample conifguration file
+The configuration file must be JSON. If `-c` is not specified autographql will attempt to load `autographql.config.json`. Below is a sample configuration file
 
 ```json
 {
